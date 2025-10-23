@@ -1,6 +1,5 @@
-package ru.krutikov.test_security2db_thymeleaf.dto;
+package ru.krutikov.products_and_shops_list.dto;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,13 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserDto {
     private Long id;
-    @NotEmpty
-    private String firstName;
-    @NotEmpty
-    private String lastName;
-    @NotEmpty(message = "Email should not be empty")
-    @Email
-    private String email;
+    @NotEmpty(message = "Username should not be empty")
+    private String username;
 
     @NotEmpty(message = "Password should not be empty")
     private String password;

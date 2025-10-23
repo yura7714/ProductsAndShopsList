@@ -1,12 +1,12 @@
-package ru.krutikov.test_security2db_thymeleaf.service;
+package ru.krutikov.products_and_shops_list.service;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.krutikov.test_security2db_thymeleaf.entity.User;
-import ru.krutikov.test_security2db_thymeleaf.repository.UserRepository;
+import ru.krutikov.products_and_shops_list.entity.User;
+import ru.krutikov.products_and_shops_list.repository.UserRepository;
 
 import java.util.stream.Collectors;
 
@@ -15,14 +15,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
     public CustomUserDetailsService(UserRepository userRepository) { this.userRepository = userRepository; }
 
-
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
 
-        User user = userRepository.findByEmail(usernameOrEmail);
+        User user = userRepository.findByUsername(usernameOrEmail);
         if (user != null) {
             return new org.springframework.security.core.userdetails.User(
-                    user.getEmail(),
+                    user.getUsername(),
                     user.getPassword(),
                     user.getRoles().stream()
                             .map(role -> new SimpleGrantedAuthority(role.getName()))

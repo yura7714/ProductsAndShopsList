@@ -1,13 +1,13 @@
-package ru.krutikov.test_security2db_thymeleaf.service;
+package ru.krutikov.products_and_shops_list.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.krutikov.test_security2db_thymeleaf.dto.UserDto;
-import ru.krutikov.test_security2db_thymeleaf.entity.Role;
-import ru.krutikov.test_security2db_thymeleaf.entity.User;
-import ru.krutikov.test_security2db_thymeleaf.repository.RoleRepository;
-import ru.krutikov.test_security2db_thymeleaf.repository.UserRepository;
+import ru.krutikov.products_and_shops_list.dto.UserDto;
+import ru.krutikov.products_and_shops_list.entity.Role;
+import ru.krutikov.products_and_shops_list.entity.User;
+import ru.krutikov.products_and_shops_list.repository.RoleRepository;
+import ru.krutikov.products_and_shops_list.repository.UserRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,12 +32,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveUser(UserDto userDto) {
         User user = new User();
-        user.setName(userDto.getFirstName() + " " + userDto.getLastName());
-        user.setEmail(userDto.getEmail());
+        user.setUsername(userDto.getUsername());
         //encrypt the password using spring security
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-        Role role = roleRepository.findByName("ROLE_ADMIN");
+        Role role = roleRepository.findByName("ADMIN");
         if (role == null) {
             role = checkRoleExist();
         }
@@ -48,13 +47,13 @@ public class UserServiceImpl implements UserService {
 
     private Role checkRoleExist() {
         Role role = new Role();
-        role.setName("ROLE_ADMIN");
+        role.setName("ADMIN");
         return roleRepository.save(role);
     }
 
     @Override
     public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findByUsername(email);
     }
 
     @Override
@@ -67,10 +66,7 @@ public class UserServiceImpl implements UserService {
 
     private UserDto mapToUserDto(User user) {
         UserDto userDto = new UserDto();
-        String[] str = user.getName().split(" ");
-        userDto.setFirstName(str[0]);
-        userDto.setLastName(str[1]);
-        userDto.setEmail(user.getEmail());
+        userDto.setUsername(user.getUsername());
         return userDto;
     }
 }

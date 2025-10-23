@@ -1,4 +1,4 @@
-package ru.krutikov.test_security2db_thymeleaf.config;
+package ru.krutikov.products_and_shops_list.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

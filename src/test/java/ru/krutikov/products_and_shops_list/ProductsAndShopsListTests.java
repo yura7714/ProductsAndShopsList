@@ -1,10 +1,10 @@
-package ru.krutikov.test_security2db_thymeleaf;
+package ru.krutikov.products_and_shops_list;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TestSecurity2dbThymeleafApplicationTests {
+class ProductsAndShopsListTests {
 
 	@Test
 	void contextLoads() {

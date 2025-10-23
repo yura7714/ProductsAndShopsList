@@ -1,4 +1,4 @@
-package ru.krutikov.test_security2db_thymeleaf.controller;
+package ru.krutikov.products_and_shops_list.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -7,9 +7,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import ru.krutikov.test_security2db_thymeleaf.dto.UserDto;
-import ru.krutikov.test_security2db_thymeleaf.entity.User;
-import ru.krutikov.test_security2db_thymeleaf.service.UserService;
+import ru.krutikov.products_and_shops_list.dto.UserDto;
+import ru.krutikov.products_and_shops_list.entity.User;
+import ru.krutikov.products_and_shops_list.service.UserService;
 
 import java.util.List;
 
@@ -41,10 +41,10 @@ public class SecurityController {
     public String registration(@Valid @ModelAttribute("user") UserDto userDto,
                                BindingResult result,
                                Model model) {
-        User existingUser = userService.findUserByEmail(userDto.getEmail());
+        User existingUser = userService.findUserByEmail(userDto.getUsername());
 
-        if(existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()) {
-            result.rejectValue("email", null, "На этот адрес электронной почты уже зарегистрирована учетная запись.");
+        if(existingUser != null && existingUser.getUsername() != null && !existingUser.getUsername().isEmpty()) {
+            result.rejectValue("username", null, "На этот адрес электронной почты уже зарегистрирована учетная запись.");
         }
 
         if (result.hasErrors()) {

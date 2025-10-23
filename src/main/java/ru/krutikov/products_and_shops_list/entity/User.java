@@ -1,4 +1,4 @@
-package ru.krutikov.test_security2db_thymeleaf.entity;
+package ru.krutikov.products_and_shops_list.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,11 +20,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false)
-    private String name;
-
     @Column(nullable = false, unique = true)
-    private String email;
+    private String username;
 
     @Column(nullable = false)
     private String password;

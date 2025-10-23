@@ -1,10 +1,10 @@
-package ru.krutikov.test_security2db_thymeleaf.repository;
+package ru.krutikov.products_and_shops_list.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.krutikov.test_security2db_thymeleaf.entity.User;
+import ru.krutikov.products_and_shops_list.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByEmail(String email);
+    User findByUsername(String email);
 }
