@@ -44,7 +44,7 @@ public class SecurityController {
         User existingUser = userService.findUserByEmail(userDto.getUsername());
 
         if(existingUser != null && existingUser.getUsername() != null && !existingUser.getUsername().isEmpty()) {
-            result.rejectValue("username", null, "На этот адрес электронной почты уже зарегистрирована учетная запись.");
+            result.rejectValue("username", null, "Учетная запись с таким логином уже существует!");
         }
 
         if (result.hasErrors()) {
