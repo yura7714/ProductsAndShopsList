@@ -22,10 +22,10 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" th:href="@{/login}">Login</a>
+          <a class="nav-link active" aria-current="page" th:href="@{/productLists}">Покупки</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" th:href="@{/register}">Register</a>
+          <a class="nav-link active" aria-current="page" th:href="@{/logout}">Выйти</a>
         </li>
       </ul>
     </div>
@@ -34,30 +34,29 @@
 <div class="container">
 
   <hr/>
-  <a th:href="@{/addStudentForm}" class="btn btn-primary">Add Student</a>
+  <a th:href="@{/addProductList}" class="btn btn-primary">Добавить покупку</a>
   <br/><br/>
-  <table class="table table-bordered table-striped" id="studentTable">
+  <table class="table table-bordered table-striped" id="productListsTable">
 
     <thead>
     <tr>
-      <th>Name</th>
-      <th>Surname</th>
-      <th>Faculty</th>
-      <th>Age</th>
+      <th>Дата</th>
+      <th>Название</th>
+      <th>Сумма</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="student: ${students}">
-      <td th:text="${student.surname}" />
-      <td th:text="${student.name}" />
-      <td th:text="${student.faculty}" />
-      <td th:text="${student.age}" />
-      <td>
-        <a th:href="@{/showUpdateForm(studentId=${student.id})}" class="btn btn-info">Update</a>
+<!--    <tr th:each="student: ${students}">-->
+<!--      <td th:text="${student.surname}" />-->
+<!--      <td th:text="${student.name}" />-->
+<!--      <td th:text="${student.faculty}" />-->
+<!--      <td th:text="${student.age}" />-->
+<!--      <td>-->
+<!--        <a th:href="@{/showUpdateForm(studentId=${student.id})}" class="btn btn-info">Update</a>-->
 
-        <a th:href="@{/deleteStudent(studentId=${student.id})}" class="btn btn-danger ml-2">Delete</a>
-      </td>
-    </tr>
+<!--        <a th:href="@{/deleteStudent(studentId=${student.id})}" class="btn btn-danger ml-2">Delete</a>-->
+<!--      </td>-->
+<!--    </tr>-->
     </tbody>
 
   </table>
@@ -67,7 +66,7 @@
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
 <script>
   $(document).ready(function() {
-      $("#studentTable").DataTable({
+      $("#productListsTable").DataTable({
           'aoColumnDefs': [{
               'bSortable': false,
               'aTargets': [-1] /* 1st one, start by the right */

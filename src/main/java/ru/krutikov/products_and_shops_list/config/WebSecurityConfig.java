@@ -29,7 +29,7 @@ public class WebSecurityConfig {
                 .formLogin(
                         form -> form.loginPage("/login")
                                 .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/users")
+                                .defaultSuccessUrl("/productLists")
                                 .permitAll()
                 ).logout(
                         logout -> logout
