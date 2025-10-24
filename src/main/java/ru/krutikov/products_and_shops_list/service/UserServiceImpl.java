@@ -9,8 +9,8 @@ import ru.krutikov.products_and_shops_list.entity.User;
 import ru.krutikov.products_and_shops_list.repository.RoleRepository;
 import ru.krutikov.products_and_shops_list.repository.UserRepository;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
         //encrypt the password using spring security
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-        Role role = roleRepository.findByName("READ_ONLY");
+        Role role = roleRepository.findByName("ROLE_READ_ONLY");
         if (role == null) {
             role = checkRoleExist();
         }
@@ -64,8 +64,14 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Optional<User> findById(Long userId) {
+        return userRepository.findById(userId);
+    }
+
     private UserDto mapToUserDto(User user) {
         UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
         userDto.setUsername(user.getUsername());
         userDto.setRole(user.getRole());
         return userDto;
