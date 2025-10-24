@@ -41,13 +41,13 @@ public class UserServiceImpl implements UserService {
             role = checkRoleExist();
         }
 
-        user.setRoles(List.of(role));
+        user.setRole(role);
         userRepository.save(user);
     }
 
     private Role checkRoleExist() {
         Role role = new Role();
-        role.setName("READ_ONLY");
+        role.setName("ROLE_READ_ONLY");
         return roleRepository.save(role);
     }
 
@@ -67,6 +67,7 @@ public class UserServiceImpl implements UserService {
     private UserDto mapToUserDto(User user) {
         UserDto userDto = new UserDto();
         userDto.setUsername(user.getUsername());
+        userDto.setRole(user.getRole());
         return userDto;
     }
 }

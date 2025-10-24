@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.krutikov.products_and_shops_list.entity.User;
 import ru.krutikov.products_and_shops_list.repository.UserRepository;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,9 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             return new org.springframework.security.core.userdetails.User(
                     user.getUsername(),
                     user.getPassword(),
-                    user.getRoles().stream()
-                            .map(role -> new SimpleGrantedAuthority(role.getName()))
-                            .collect(Collectors.toList()));
+                    List.of(new SimpleGrantedAuthority(user.getRole().getName())));
         }
 
         throw new UsernameNotFoundException("Invalid email or password");

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.krutikov.products_and_shops_list.entity.Role;
 
 @Getter
 @Setter
@@ -17,4 +18,6 @@ public class UserDto {
 
     @NotEmpty(message = "Password should not be empty")
     private String password;
+
+    private Role role;
 }
