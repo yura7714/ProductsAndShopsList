@@ -39,7 +39,7 @@
 
         <input type="text" th:field="*{username}" class="form-control col-4 mb-4" placeholder="Введите логин"/>
 
-        <select class="form-select" aria-label="User role">
+        <select class="form-select" aria-label="User role" th:field="*{role.id}">
             <option th:each="role : ${roles}"
                     th:value="${role.id}"
                     th:text="${role.name}"
@@ -50,6 +50,8 @@
         <button type="submit" class="btn btn-primary col-2">Сохранить</button>
 
         <input type="hidden" th:field="*{id}"/>
+
+        <input type="hidden" th:field="*{password}"/>
 
     </form>
     <hr/>
