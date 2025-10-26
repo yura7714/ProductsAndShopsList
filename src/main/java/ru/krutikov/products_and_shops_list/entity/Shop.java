@@ -22,4 +22,8 @@ public class Shop {
 
     @Column(nullable = false)
     private String address;
+
+    @ManyToOne
+    @JoinColumn(name = "created_by_user_id")
+    private User createdBy;
 }

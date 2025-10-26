@@ -29,4 +29,7 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @OneToMany(mappedBy = "createdBy")
+    private List<Shop> createdShops = new ArrayList<>();
 }

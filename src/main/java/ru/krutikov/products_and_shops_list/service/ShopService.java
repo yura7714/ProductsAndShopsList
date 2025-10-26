@@ -10,5 +10,7 @@ public interface ShopService {
 
     List<Shop> findAll();
 
+//    List<Shop> findAllByUser(Long userId);
+
     Optional<Shop> findById(Long shopId);
 }
