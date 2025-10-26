@@ -8,9 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ru.krutikov.products_and_shops_list.entity.Shop;
 import ru.krutikov.products_and_shops_list.entity.User;
@@ -62,6 +60,12 @@ public class ShopController {
         shop.setCreatedBy(currentUser);
 
         shopService.saveShop(shop);
+        return "redirect:/shops";
+    }
+
+    @GetMapping("/deleteShop")
+    public String deleteShop(@RequestParam Long shopId) {
+        shopService.deleteById(shopId);
         return "redirect:/shops";
     }
 }

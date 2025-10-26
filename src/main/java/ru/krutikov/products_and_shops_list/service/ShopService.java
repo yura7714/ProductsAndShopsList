@@ -14,4 +14,6 @@ public interface ShopService {
     List<Shop> findAllByUser(String username);
 
     Optional<Shop> findById(Long shopId);
+
+    void deleteById(Long shopId);
 }

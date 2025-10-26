@@ -38,4 +38,9 @@ public class ShopServiceImpl implements ShopService {
     public Optional<Shop> findById(Long shopId) {
         return shopRepository.findById(shopId);
     }
+
+    @Override
+    public void deleteById(Long shopId) {
+        shopRepository.deleteById(shopId);
+    }
 }
