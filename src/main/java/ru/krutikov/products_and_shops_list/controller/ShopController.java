@@ -1,6 +1,7 @@
 package ru.krutikov.products_and_shops_list.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +17,7 @@ import ru.krutikov.products_and_shops_list.service.ShopService;
 import ru.krutikov.products_and_shops_list.service.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ShopController {
@@ -67,5 +69,18 @@ public class ShopController {
     public String deleteShop(@RequestParam Long shopId) {
         shopService.deleteById(shopId);
         return "redirect:/shops";
+    }
+
+    @GetMapping("/updateShop")
+    public ModelAndView updateShop(@RequestParam Long shopId) {
+        ModelAndView mav = new ModelAndView("update-shop-form");
+        Optional<Shop> optionalShop = shopService.findById(shopId);
+        Shop shop = new Shop();
+        if (optionalShop.isPresent()) {
+            shop = optionalShop.get();
+        }
+
+        mav.addObject("shop", shop);
+        return mav;
     }
 }
