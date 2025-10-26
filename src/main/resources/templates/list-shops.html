@@ -48,17 +48,15 @@
     </tr>
     </thead>
     <tbody>
-<!--    <tr th:each="student: ${students}">-->
-<!--      <td th:text="${student.surname}" />-->
-<!--      <td th:text="${student.name}" />-->
-<!--      <td th:text="${student.faculty}" />-->
-<!--      <td th:text="${student.age}" />-->
-<!--      <td>-->
-<!--        <a th:href="@{/showUpdateForm(studentId=${student.id})}" class="btn btn-info">Update</a>-->
+    <tr th:each="shop: ${shops}">
+      <td th:text="${shop.name}"></td>
+      <td th:text="${shop.address}"></td>
+      <td>
+        <a th:href="@{/updateShop(shopId=${shop.id})}" class="btn btn-info">Изменить</a>
 
-<!--        <a th:href="@{/deleteStudent(studentId=${student.id})}" class="btn btn-danger ml-2">Delete</a>-->
-<!--      </td>-->
-<!--    </tr>-->
+        <a th:href="@{/deleteShop(shopId=${shop.id})}" class="btn btn-danger ml-2">Удалить</a>
+      </td>
+    </tr>
     </tbody>
 
   </table>
