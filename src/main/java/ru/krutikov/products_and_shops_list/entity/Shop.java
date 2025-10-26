@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -26,4 +28,7 @@ public class Shop {
     @ManyToOne
     @JoinColumn(name = "created_by_user_id")
     private User createdBy;
+
+    @OneToMany(mappedBy = "shop")
+    private List<ProductList> productLists;
 }

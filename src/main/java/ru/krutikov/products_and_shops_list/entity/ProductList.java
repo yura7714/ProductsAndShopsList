@@ -32,4 +32,8 @@ public class ProductList {
 
     @OneToMany(mappedBy = "productList")
     private List<ProductListProduct> products = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "shop_id")
+    private Shop shop;
 }
