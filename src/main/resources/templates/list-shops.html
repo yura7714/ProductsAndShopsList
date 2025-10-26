@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
 <head>
   <meta charset="UTF-8">
@@ -45,12 +46,15 @@
     <tr>
       <th>Название</th>
       <th>Адрес</th>
+      <th sec:authorize="hasRole('ROLE_ADMIN')">Кем создан</th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="shop: ${shops}">
       <td th:text="${shop.name}"></td>
       <td th:text="${shop.address}"></td>
+      <td sec:authorize="hasRole('ROLE_ADMIN')" th:text="${shop.createdBy.username}"></td>
       <td>
         <a th:href="@{/updateShop(shopId=${shop.id})}" class="btn btn-info">Изменить</a>
 

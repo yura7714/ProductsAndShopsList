@@ -1,7 +1,9 @@
 package ru.krutikov.products_and_shops_list.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
@@ -30,12 +32,15 @@ public class ShopController {
 
     @GetMapping("/shops")
     public String shops(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         List<Shop> shops;
-//        if (securityContextHolderAwareRequestWrapper.isUserInRole("ROLE_ADMIN")) {
+        if (authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             shops = shopService.findAll();
-//        } else {
-//
-//        }
+        } else {
+            shops = shopService.findAllByUser(authentication.getName());
+        }
         model.addAttribute("shops", shops);
         return "list-shops";
     }
