@@ -94,7 +94,7 @@
             </div>
         </div>
 
-        <!-- БЫСТРОЕ ДОБАВЛЕНИЕ ПРОДУКТА - ДОБАВЛЯЕМ ЗДЕСЬ -->
+        <!-- БЫСТРОЕ ДОБАВЛЕНИЕ ПРОДУКТА -->
         <div class="card mb-3">
             <div class="card-header">
                 <h6 class="mb-0">Быстрое добавление нового продукта</h6>
@@ -105,11 +105,6 @@
                         <label class="form-label">Название продукта</label>
                         <input type="text" class="form-control" id="newProductName"
                                placeholder="Введите название нового продукта">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Категория (необязательно)</label>
-                        <input type="text" class="form-control" id="newProductCategory"
-                               placeholder="Категория продукта">
                     </div>
                     <div class="col-md-2">
                         <button type="button" class="btn btn-success w-100" onclick="addNewProduct()">
@@ -197,10 +192,8 @@
     // Функция для создания нового продукта
     function addNewProduct() {
         const productNameInput = document.getElementById('newProductName');
-        const categoryInput = document.getElementById('newProductCategory');
 
         const productName = productNameInput.value.trim();
-        const category = categoryInput.value.trim();
 
         if (!productName) {
             alert('Пожалуйста, введите название продукта');
@@ -221,8 +214,7 @@
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                name: productName,
-                category: category
+                name: productName
             })
         })
         .then(response => {
@@ -240,7 +232,6 @@
 
             // Очищаем поля формы
             productNameInput.value = '';
-            categoryInput.value = '';
             productNameInput.focus();
 
             // Показываем сообщение об успехе
@@ -276,6 +267,7 @@
         const container = document.getElementById('products-container');
         const emptyRow = document.getElementById('empty-row').cloneNode(true);
         emptyRow.style.display = 'flex';
+        emptyRow.removeAttribute('data-template');
 
         // Обновляем имена полей
         const inputs = emptyRow.querySelectorAll('select, input');

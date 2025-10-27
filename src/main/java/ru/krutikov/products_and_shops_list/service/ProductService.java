@@ -22,7 +22,6 @@ public class ProductService {
     public ProductDto quickCreate(QuickProductRequest request) {
         Product product = new Product();
         product.setName(request.getName());
-        // category можно добавить если есть в Entity
 
         Product savedProduct = productRepository.save(product);
 
