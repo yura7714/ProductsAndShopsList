@@ -1,0 +1,27 @@
+package ru.krutikov.products_and_shops_list.controller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import ru.krutikov.products_and_shops_list.dto.ProductDto;
+import ru.krutikov.products_and_shops_list.dto.QuickProductRequest;
+import ru.krutikov.products_and_shops_list.service.ProductService;
+
+@RestController
+@RequestMapping("/api/products")
+public class ProductApiController {
+
+    private final ProductService productService;
+
+    public ProductApiController(ProductService productService) {
+        this.productService = productService;
+    }
+
+    @PostMapping("/quick-create")
+    public ResponseEntity<ProductDto> quickCreateProduct(@RequestBody QuickProductRequest request) {
+        ProductDto newProduct = productService.quickCreate(request);
+        return ResponseEntity.ok(newProduct);
+    }
+}

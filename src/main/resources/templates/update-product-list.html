@@ -1,0 +1,369 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Список покупок</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/index}">Список покупок</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/productLists}">Покупки</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/shops}">Магазины</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/logout}">Выйти</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+
+    <hr/>
+
+    <h3>Изменение списка покупок</h3>
+    <hr/>
+
+    <!-- Пустой шаблон для новых продуктов -->
+    <div id="empty-row" class="product-row row mb-2" style="display: none;">
+        <div class="col-md-5">
+            <select class="form-select product-select" name="products[].id">
+                <option value="">Выберите продукт</option>
+                <option th:each="product : ${allProducts}"
+                        th:value="${product.id}"
+                        th:text="${product.name}">
+                </option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <input type="number" class="form-control" name="products[].quantity"
+                   min="1" value="1" placeholder="Кол-во">
+        </div>
+        <div class="col-md-3">
+            <input type="number" class="form-control price-input"
+                   name="products[].price" step="0.01" min="0"
+                   placeholder="Цена" onchange="calculateTotal()">
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-danger btn-sm" onclick="removeProductRow(this)">
+                Удалить
+            </button>
+        </div>
+    </div>
+
+    <form th:action="@{/saveProductList}" th:object="${productList}" method="POST">
+
+        <input type="hidden" th:field="*{id}">
+
+        <!-- Основная информация -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Название списка</label>
+                <input type="text" class="form-control" th:field="*{name}" required>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Дата</label>
+                <input type="date" class="form-control" th:field="*{date}"
+                       th:value="${#temporals.format(productList.date, 'yyyy-MM-dd')}" required>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Магазин</label>
+                <select class="form-select" th:field="*{shop.id}" required>
+                    <option value="">Выберите магазин</option>
+                    <option th:each="shop : ${shops}"
+                            th:value="${shop.id}"
+                            th:text="${shop.name}"
+                            th:selected="${shop.id == productList.shop.id}">
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <!-- БЫСТРОЕ ДОБАВЛЕНИЕ ПРОДУКТА - ДОБАВЛЯЕМ ЗДЕСЬ -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6 class="mb-0">Быстрое добавление нового продукта</h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-6">
+                        <label class="form-label">Название продукта</label>
+                        <input type="text" class="form-control" id="newProductName"
+                               placeholder="Введите название нового продукта">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Категория (необязательно)</label>
+                        <input type="text" class="form-control" id="newProductCategory"
+                               placeholder="Категория продукта">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-success w-100" onclick="addNewProduct()">
+                            + Создать продукт
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <small class="text-muted">Продукт будет сразу добавлен в список и доступен для выбора</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Список продуктов -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Продукты в списке</h5>
+                <button type="button" class="btn btn-success btn-sm" onclick="addProductRow()">
+                    + Добавить строку
+                </button>
+            </div>
+            <div class="card-body">
+                <div id="products-container">
+                    <!-- Существующие продукты -->
+                    <div th:each="item, stat : *{products}" class="product-row row mb-2 align-items-center">
+                        <div class="col-md-5">
+                            <select class="form-select product-select"
+                                    th:field="*{products[__${stat.index}__].product.id}" required>
+                                <option value="">Выберите продукт</option>
+                                <option th:each="product : ${allProducts}"
+                                        th:value="${product.id}"
+                                        th:text="${product.name}"
+                                        th:selected="${product.id == item.product.id}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" class="form-control" th:field="*{products[__${stat.index}__].quantity}"
+                                   min="1" value="1" placeholder="Кол-во" required>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="number" class="form-control price-input"
+                                   th:field="*{products[__${stat.index}__].price}"
+                                   step="0.01" min="0" placeholder="Цена" required
+                                   onchange="calculateTotal()">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removeProductRow(this)">
+                                Удалить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Итоговая сумма -->
+                <div class="row mt-3">
+                    <div class="col-md-10 text-end">
+                        <strong>Общая сумма:</strong>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control" th:field="*{totalPrice}"
+                               step="0.01" min="0" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Сохранить список</button>
+        <a th:href="@{/productLists}" class="btn btn-secondary">Назад к списку</a>
+    </form>
+</div>
+
+<script>
+    let productCounter = [[${productList.products != null ? productList.products.size() : 0}]];
+    let allProducts = []; // Будем хранить все продукты
+
+    // Загружаем существующие продукты при загрузке страницы
+    document.addEventListener('DOMContentLoaded', function() {
+        if (productCounter === 0) {
+            addProductRow();
+        }
+        calculateTotal();
+    });
+
+    // Функция для создания нового продукта
+    function addNewProduct() {
+        const productNameInput = document.getElementById('newProductName');
+        const categoryInput = document.getElementById('newProductCategory');
+
+        const productName = productNameInput.value.trim();
+        const category = categoryInput.value.trim();
+
+        if (!productName) {
+            alert('Пожалуйста, введите название продукта');
+            productNameInput.focus();
+            return;
+        }
+
+        // Показываем индикатор загрузки
+        const createButton = document.querySelector('button[onclick="addNewProduct()"]');
+        const originalText = createButton.textContent;
+        createButton.textContent = 'Создание...';
+        createButton.disabled = true;
+
+        // AJAX запрос для создания продукта
+        fetch('/api/products/quick-create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: productName,
+                category: category
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ошибка сервера');
+            }
+            return response.json();
+        })
+        .then(newProduct => {
+            // Добавляем новый продукт во все выпадающие списки
+            addProductToSelect(newProduct);
+
+            // Автоматически добавляем новую строку с выбранным продуктом
+            addProductRowWithProduct(newProduct.id, newProduct.name);
+
+            // Очищаем поля формы
+            productNameInput.value = '';
+            categoryInput.value = '';
+            productNameInput.focus();
+
+            // Показываем сообщение об успехе
+            showAlert(`Продукт "${productName}" успешно создан и добавлен в список!`, 'success');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Ошибка при создании продукта. Проверьте консоль для подробностей.');
+        })
+        .finally(() => {
+            // Восстанавливаем кнопку
+            createButton.textContent = originalText;
+            createButton.disabled = false;
+        });
+    }
+
+    // Добавляем продукт во все выпадающие списки
+    function addProductToSelect(product) {
+        const selects = document.querySelectorAll('.product-select');
+        selects.forEach(select => {
+            const option = document.createElement('option');
+            option.value = product.id;
+            option.textContent = product.name;
+            select.appendChild(option);
+        });
+
+        // Сохраняем в локальный кэш
+        allProducts.push(product);
+    }
+
+    // Добавляем строку с предварительно выбранным продуктом
+    function addProductRowWithProduct(productId, productName) {
+        const container = document.getElementById('products-container');
+        const emptyRow = document.getElementById('empty-row').cloneNode(true);
+        emptyRow.style.display = 'flex';
+
+        // Обновляем имена полей
+        const inputs = emptyRow.querySelectorAll('select, input');
+        inputs.forEach(input => {
+            const name = input.getAttribute('name').replace('[]', `[${productCounter}]`);
+            input.setAttribute('name', name);
+        });
+
+        // Выбираем новый продукт в селекте
+        const select = emptyRow.querySelector('.product-select');
+        select.value = productId;
+
+        container.appendChild(emptyRow);
+        productCounter++;
+
+        // Пересчитываем итог (на случай если уже введена цена)
+        calculateTotal();
+    }
+
+    function addProductRow() {
+        const container = document.getElementById('products-container');
+        const emptyRow = document.getElementById('empty-row').cloneNode(true);
+        emptyRow.style.display = 'flex';
+        emptyRow.classList.add('align-items-center');
+
+        // Обновляем имена полей
+        const inputs = emptyRow.querySelectorAll('select, input');
+        inputs.forEach(input => {
+            const name = input.getAttribute('name').replace('[]', `[${productCounter}]`);
+            input.setAttribute('name', name);
+
+            if (input.tagName === 'SELECT' || input.type === 'number') {
+                input.setAttribute('required', 'required');
+            }
+        });
+
+        container.appendChild(emptyRow);
+        productCounter++;
+    }
+
+    function removeProductRow(button) {
+        const row = button.closest('.product-row');
+        if (document.querySelectorAll('.product-row').length > 1) {
+            row.remove();
+            calculateTotal();
+        } else {
+            alert('Должен остаться хотя бы один продукт');
+        }
+    }
+
+    function calculateTotal() {
+        let total = 0;
+        document.querySelectorAll('.price-input').forEach(input => {
+            if (input.value) {
+                const quantityInput = input.closest('.row').querySelector('input[type="number"]');
+                const quantity = quantityInput ? parseInt(quantityInput.value) || 1 : 1;
+                total += parseFloat(input.value) * quantity;
+            }
+        });
+        document.querySelector('input[name="totalPrice"]').value = total.toFixed(2);
+    }
+
+    // Функция для показа уведомлений
+    function showAlert(message, type) {
+        const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert ${alertClass} alert-dismissible fade show mt-3`;
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+
+        // Вставляем после карточки быстрого добавления
+        const quickAddCard = document.querySelector('.card.mb-3');
+        quickAddCard.parentNode.insertBefore(alertDiv, quickAddCard.nextSibling);
+
+        // Автоматически скрываем через 4 секунды
+        setTimeout(() => {
+            if (alertDiv.parentElement) {
+                const bsAlert = new bootstrap.Alert(alertDiv);
+                bsAlert.close();
+            }
+        }, 4000);
+    }
+</script>
+
+<!-- Подключаем Bootstrap JS для работы alert -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
