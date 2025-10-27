@@ -46,20 +46,20 @@
       <th>Дата</th>
       <th>Название</th>
       <th>Сумма</th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
-<!--    <tr th:each="student: ${students}">-->
-<!--      <td th:text="${student.surname}" />-->
-<!--      <td th:text="${student.name}" />-->
-<!--      <td th:text="${student.faculty}" />-->
-<!--      <td th:text="${student.age}" />-->
-<!--      <td>-->
-<!--        <a th:href="@{/showUpdateForm(studentId=${student.id})}" class="btn btn-info">Update</a>-->
+    <tr th:each="productList: ${productLists}">
+      <td th:text="${productList.date}"></td>
+      <td th:text="${productList.name}"></td>
+      <td th:text="${productList.totalPrice}"></td>
+      <td>
+        <a th:href="@{/updateProductList(productListId=${productList.id})}" class="btn btn-info">Изменить</a>
 
-<!--        <a th:href="@{/deleteStudent(studentId=${student.id})}" class="btn btn-danger ml-2">Delete</a>-->
-<!--      </td>-->
-<!--    </tr>-->
+        <a th:href="@{/deleteProductList(productListId=${productList.id})}" class="btn btn-danger ml-2">Удалить</a>
+      </td>
+    </tr>
     </tbody>
 
   </table>

@@ -1,6 +1,7 @@
 package ru.krutikov.products_and_shops_list.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.krutikov.products_and_shops_list.entity.Product;
 import ru.krutikov.products_and_shops_list.entity.ProductList;
 import ru.krutikov.products_and_shops_list.entity.ProductListProduct;
@@ -8,7 +9,10 @@ import ru.krutikov.products_and_shops_list.repository.ProductListProductReposito
 import ru.krutikov.products_and_shops_list.repository.ProductListRepository;
 import ru.krutikov.products_and_shops_list.repository.ProductRepository;
 
+import java.util.List;
+
 @Service
+@Transactional
 public class ProductListService {
     private final ProductListRepository productListRepository;
     private final ProductListProductRepository productListProductRepository;
@@ -40,5 +44,9 @@ public class ProductListService {
             productListProduct.setProductList(productList);
             productListProductRepository.save(productListProduct);
         }
+    }
+
+    public List<ProductList> findAll() {
+        return productListRepository.findAll();
     }
 }

@@ -32,8 +32,13 @@ public class ProductListController {
     }
 
     @GetMapping("/productLists")
-    public String productLists() {
-        return "list-product-lists";
+    public ModelAndView productLists() {
+        ModelAndView mav = new ModelAndView("list-product-lists");
+        List<ProductList> productLists = productListService.findAll();
+
+        mav.addObject("productLists", productLists);
+
+        return mav;
     }
 
     @GetMapping("/addProductList")
