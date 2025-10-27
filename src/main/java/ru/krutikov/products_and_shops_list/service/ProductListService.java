@@ -10,6 +10,7 @@ import ru.krutikov.products_and_shops_list.repository.ProductListRepository;
 import ru.krutikov.products_and_shops_list.repository.ProductRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -33,21 +34,21 @@ public class ProductListService {
             productListProductRepository.deleteByProductListId(productList.getId());
         }
 
-        productList = productListRepository.save(productList);
-
         for (ProductListProduct productListProduct : productList.getProducts()) {
 
-            if (productListProduct.getId() == null) {
+            // если на форме удалить продукты из начала списка, то автоматом в products попадают null элементы, пропускаем их
+            if (productListProduct.getProduct() == null || productListProduct.getProduct().getId() == null) {
                 continue;
             }
 
-            Product product = productRepository.findById(productListProduct.getId()).get();
+            Product product = productRepository.findById(productListProduct.getProduct().getId()).get();
 
             productListProduct.setId(null);
             productListProduct.setProduct(product);
             productListProduct.setProductList(productList);
-            productListProductRepository.save(productListProduct);
         }
+
+        productListRepository.save(productList);
     }
 
     public List<ProductList> findAll() {
@@ -57,5 +58,9 @@ public class ProductListService {
     public void deleteById(Long productListId) {
         productListProductRepository.deleteByProductListId(productListId);
         productListRepository.deleteById(productListId);
+    }
+
+    public Optional<ProductList> findById(Long productListId) {
+        return productListRepository.findById(productListId);
     }
 }

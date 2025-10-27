@@ -3,6 +3,7 @@ package ru.krutikov.products_and_shops_list.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.krutikov.products_and_shops_list.dto.UserDto;
 import ru.krutikov.products_and_shops_list.entity.Role;
 import ru.krutikov.products_and_shops_list.entity.User;
@@ -14,6 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;

@@ -41,7 +41,7 @@
     <!-- Пустой шаблон для новых продуктов -->
     <div id="empty-row" class="product-row row mb-2" style="display: none;" data-template="true">
         <div class="col-md-5">
-            <select class="form-select product-select" name="products[].id">
+            <select class="form-select product-select" name="products[].product.id">
                 <option value="">Выберите продукт</option>
                 <option th:each="product : ${allProducts}"
                         th:value="${product.id}"
@@ -77,8 +77,9 @@
             </div>
             <div class="col-md-3">
                 <label class="form-label">Дата</label>
-                <input type="date" class="form-control" th:field="*{date}"
-                       th:value="${#temporals.format(productList.date, 'yyyy-MM-dd')}" required>
+                <input type="date" class="form-control"
+                       th:field="*{date}"
+                       required>
             </div>
             <div class="col-md-3">
                 <label class="form-label">Магазин</label>

@@ -31,7 +31,7 @@ public class ProductList {
     @Column(nullable = false)
     private Double totalPrice;
 
-    @OneToMany(mappedBy = "productList")
+    @OneToMany(mappedBy = "productList", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductListProduct> products = new ArrayList<>();
 
     @ManyToOne

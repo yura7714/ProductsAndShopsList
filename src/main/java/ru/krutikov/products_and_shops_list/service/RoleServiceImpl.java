@@ -2,12 +2,14 @@ package ru.krutikov.products_and_shops_list.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.krutikov.products_and_shops_list.entity.Role;
 import ru.krutikov.products_and_shops_list.repository.RoleRepository;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;

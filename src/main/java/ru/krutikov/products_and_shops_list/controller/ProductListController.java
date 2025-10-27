@@ -16,6 +16,7 @@ import ru.krutikov.products_and_shops_list.service.ShopService;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ProductListController {
@@ -75,5 +76,33 @@ public class ProductListController {
     public String deleteProductList(@RequestParam Long productListId) {
         productListService.deleteById(productListId);
         return "redirect:/productLists";
+    }
+
+    @GetMapping("/updateProductList")
+    public ModelAndView updateProductList(@RequestParam Long productListId) {
+        ModelAndView mav = new ModelAndView("update-product-list");
+
+        Optional<ProductList> optionalProductList = productListService.findById(productListId);
+        ProductList productList = new ProductList();
+
+        if (optionalProductList.isPresent()) {
+            productList = optionalProductList.get();
+        }
+
+        mav.addObject("productList", productList);
+
+        List<Shop> userShops = shopService.findAllByUser(
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getName()
+        );
+
+        mav.addObject("shops", userShops);
+
+        List<Product> products = productService.getAllProducts();
+        mav.addObject("allProducts", products);
+
+        return mav;
     }
 }
