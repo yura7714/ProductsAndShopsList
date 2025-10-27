@@ -37,6 +37,10 @@ public class ProductListService {
 
         for (ProductListProduct productListProduct : productList.getProducts()) {
 
+            if (productListProduct.getId() == null) {
+                continue;
+            }
+
             Product product = productRepository.findById(productListProduct.getId()).get();
 
             productListProduct.setId(null);

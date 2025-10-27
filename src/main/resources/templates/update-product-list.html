@@ -39,7 +39,7 @@
     <hr/>
 
     <!-- Пустой шаблон для новых продуктов -->
-    <div id="empty-row" class="product-row row mb-2" style="display: none;">
+    <div id="empty-row" class="product-row row mb-2" style="display: none;" data-template="true">
         <div class="col-md-5">
             <select class="form-select product-select" name="products[].id">
                 <option value="">Выберите продукт</option>
@@ -299,6 +299,7 @@
         const emptyRow = document.getElementById('empty-row').cloneNode(true);
         emptyRow.style.display = 'flex';
         emptyRow.classList.add('align-items-center');
+        emptyRow.removeAttribute('data-template');
 
         // Обновляем имена полей
         const inputs = emptyRow.querySelectorAll('select, input');
@@ -317,7 +318,7 @@
 
     function removeProductRow(button) {
         const row = button.closest('.product-row');
-        if (document.querySelectorAll('.product-row').length > 1) {
+        if (document.querySelectorAll('.product-row:not([data-template])').length > 1) {
             row.remove();
             calculateTotal();
         } else {
