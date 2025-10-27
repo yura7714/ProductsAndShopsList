@@ -11,11 +11,11 @@ import ru.krutikov.products_and_shops_list.service.ProductService;
 
 @RestController
 @RequestMapping("/api/products")
-public class ProductApiController {
+public class ProductController {
 
     private final ProductService productService;
 
-    public ProductApiController(ProductService productService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
