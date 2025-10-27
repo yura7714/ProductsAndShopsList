@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import ru.krutikov.products_and_shops_list.entity.Product;
 import ru.krutikov.products_and_shops_list.entity.ProductList;
@@ -70,4 +71,9 @@ public class ProductListController {
         return "redirect:/productLists";
     }
 
+    @GetMapping("/deleteProductList")
+    public String deleteProductList(@RequestParam Long productListId) {
+        productListService.deleteById(productListId);
+        return "redirect:/productLists";
+    }
 }

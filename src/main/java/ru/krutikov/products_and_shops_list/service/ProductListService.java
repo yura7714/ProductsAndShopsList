@@ -49,4 +49,9 @@ public class ProductListService {
     public List<ProductList> findAll() {
         return productListRepository.findAll();
     }
+
+    public void deleteById(Long productListId) {
+        productListProductRepository.deleteByProductListId(productListId);
+        productListRepository.deleteById(productListId);
+    }
 }
