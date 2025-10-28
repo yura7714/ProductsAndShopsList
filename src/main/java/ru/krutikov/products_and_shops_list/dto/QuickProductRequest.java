@@ -11,5 +11,4 @@ import lombok.Setter;
 public class QuickProductRequest {
     @NotBlank
     private String name;
-    private String category;
 }

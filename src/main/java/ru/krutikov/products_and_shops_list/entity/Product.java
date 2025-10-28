@@ -25,4 +25,8 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<ProductListProduct> productLists = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User createdBy;
 }

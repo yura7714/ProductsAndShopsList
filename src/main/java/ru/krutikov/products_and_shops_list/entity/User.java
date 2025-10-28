@@ -32,4 +32,10 @@ public class User {
 
     @OneToMany(mappedBy = "createdBy")
     private List<Shop> createdShops = new ArrayList<>();
+
+    @OneToMany(mappedBy = "createdBy")
+    private List<ProductList> createdProductLists = new ArrayList<>();
+
+    @OneToMany(mappedBy = "createdBy")
+    private List<Product> createdProducts = new ArrayList<>();
 }

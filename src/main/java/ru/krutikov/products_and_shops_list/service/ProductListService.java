@@ -55,6 +55,10 @@ public class ProductListService {
         return productListRepository.findAll();
     }
 
+    public List<ProductList> findAllByUser(String username) {
+        return productListRepository.findByCreatedByUsername(username);
+    }
+
     public void deleteById(Long productListId) {
         productListProductRepository.deleteByProductListId(productListId);
         productListRepository.deleteById(productListId);

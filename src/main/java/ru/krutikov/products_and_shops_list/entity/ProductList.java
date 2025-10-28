@@ -37,4 +37,8 @@ public class ProductList {
     @ManyToOne
     @JoinColumn(name = "shop_id")
     private Shop shop;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User createdBy;
 }

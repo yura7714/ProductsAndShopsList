@@ -1,6 +1,8 @@
 package ru.krutikov.products_and_shops_list.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +22,9 @@ public class ProductController {
     }
 
     @PostMapping("/quick-create")
-    public ResponseEntity<ProductDto> quickCreateProduct(@RequestBody QuickProductRequest request) {
-        ProductDto newProduct = productService.quickCreate(request);
+    public ResponseEntity<ProductDto> quickCreateProduct(@RequestBody QuickProductRequest request,
+                                                         @AuthenticationPrincipal UserDetails userDetails) {
+        ProductDto newProduct = productService.quickCreate(request, userDetails.getUsername());
         return ResponseEntity.ok(newProduct);
     }
 }

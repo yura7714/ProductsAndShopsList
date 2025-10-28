@@ -29,6 +29,7 @@
         <th>Дата</th>
         <th>Название</th>
         <th>Сумма</th>
+        <th sec:authorize="hasRole('ROLE_ADMIN')">Кем создан</th>
         <th></th>
       </tr>
       </thead>
@@ -37,6 +38,7 @@
         <td th:text="${productList.date}"></td>
         <td th:text="${productList.name}"></td>
         <td th:text="${productList.totalPrice}"></td>
+        <td sec:authorize="hasRole('ROLE_ADMIN')" th:text="${productList.createdBy.username}"></td>
         <td>
           <a th:href="@{/updateProductList(productListId=${productList.id})}" class="btn btn-info">Изменить</a>
 

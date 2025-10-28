@@ -6,5 +6,5 @@ import ru.krutikov.products_and_shops_list.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUsername(String email);
+    User findByUsername(String username);
 }

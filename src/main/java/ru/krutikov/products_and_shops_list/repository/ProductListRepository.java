@@ -24,4 +24,6 @@ public interface ProductListRepository extends JpaRepository<ProductList, Long> 
             "GROUP BY MONTH(pl.date) " +
             "ORDER BY month")
     List<Object[]> getMonthlyExpensesForYear(@Param("year") int year);
+
+    List<ProductList> findByCreatedByUsername(String username);
 }
