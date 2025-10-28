@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Расходы по месяцам</title>
@@ -10,7 +11,10 @@
 <div th:replace="~{fragments :: navbar}"></div>
 
 <div class="container mt-4">
-    <div class="row">
+    <div sec:authorize="hasRole('ROLE_READ_ONLY')">
+        <p class="text-body mb-3 text-center">Для получения доступа к разделу обратитесь к администратору</p>
+    </div>
+    <div sec:authorize="!hasRole('ROLE_READ_ONLY')" class="row">
         <div class="col-12">
             <h2 class="text-primary mb-4">Расходы по месяцам</h2>
 
