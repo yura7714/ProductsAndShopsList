@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
 <head>
   <meta charset="UTF-8">
@@ -14,34 +15,37 @@
 <body>
 <nav th:replace="~{fragments :: navbar}"></nav>
 <div class="container">
+  <div sec:authorize="hasRole('ROLE_READ_ONLY')">
+    <p class="text-body mb-3 text-center">Для получения доступа к разделу обратитесь к администратору</p>
+  </div>
 
-  <hr/>
-  <a th:href="@{/addProductList}" class="btn btn-primary">Добавить покупку</a>
-  <br/><br/>
-  <table class="table table-bordered table-striped" id="productListsTable">
+  <div sec:authorize="!hasRole('ROLE_READ_ONLY')">
+    <hr/>
+    <a th:href="@{/addProductList}" class="btn btn-primary">Добавить покупку</a>
+    <br/><br/>
+    <table class="table table-bordered table-striped" id="productListsTable">
+      <thead>
+      <tr>
+        <th>Дата</th>
+        <th>Название</th>
+        <th>Сумма</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="productList: ${productLists}">
+        <td th:text="${productList.date}"></td>
+        <td th:text="${productList.name}"></td>
+        <td th:text="${productList.totalPrice}"></td>
+        <td>
+          <a th:href="@{/updateProductList(productListId=${productList.id})}" class="btn btn-info">Изменить</a>
 
-    <thead>
-    <tr>
-      <th>Дата</th>
-      <th>Название</th>
-      <th>Сумма</th>
-      <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="productList: ${productLists}">
-      <td th:text="${productList.date}"></td>
-      <td th:text="${productList.name}"></td>
-      <td th:text="${productList.totalPrice}"></td>
-      <td>
-        <a th:href="@{/updateProductList(productListId=${productList.id})}" class="btn btn-info">Изменить</a>
-
-        <a th:href="@{/deleteProductList(productListId=${productList.id})}" class="btn btn-danger ml-2">Удалить</a>
-      </td>
-    </tr>
-    </tbody>
-
-  </table>
+          <a th:href="@{/deleteProductList(productListId=${productList.id})}" class="btn btn-danger ml-2">Удалить</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

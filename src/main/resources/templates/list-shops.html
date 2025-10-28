@@ -15,6 +15,11 @@
 <body>
 <nav th:replace="~{fragments :: navbar}"></nav>
 <div class="container">
+  <div sec:authorize="hasRole('ROLE_READ_ONLY')">
+    <p class="text-body mb-3 text-center">Для получения доступа к разделу обратитесь к администратору</p>
+  </div>
+
+  <div sec:authorize="!hasRole('ROLE_READ_ONLY')">
 
   <hr/>
   <a th:href="@{/addShop}" class="btn btn-primary">Добавить магазин</a>
@@ -43,6 +48,7 @@
     </tbody>
 
   </table>
+  </div>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
