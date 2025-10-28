@@ -86,7 +86,7 @@ public class ProductListController {
     public String saveProductList(@ModelAttribute ProductList productList,
                                   @AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails.getUsername();
-        User currentUser = userService.findUserByEmail(username);
+        User currentUser = userService.findUserByUsername(username);
 
         productList.setCreatedBy(currentUser);
 

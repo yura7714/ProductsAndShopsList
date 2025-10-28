@@ -11,19 +11,21 @@ import java.util.List;
 public interface ProductListRepository extends JpaRepository<ProductList, Long> {
     @Query("SELECT YEAR(pl.date) as year, MONTH(pl.date) as month, SUM(pl.totalPrice) as total " +
             "FROM ProductList pl " +
-            "WHERE pl.date BETWEEN :startDate AND :endDate " +
+            "WHERE pl.date BETWEEN :startDate AND :endDate and pl.createdBy.username = :username " +
             "GROUP BY YEAR(pl.date), MONTH(pl.date) " +
             "ORDER BY year DESC, month DESC")
     List<Object[]> getMonthlyExpenses(@Param("startDate") LocalDate startDate,
-                                      @Param("endDate") LocalDate endDate);
+                                      @Param("endDate") LocalDate endDate,
+                                      @Param("username") String username);
 
     // Альтернативный вариант с конкретным годом
     @Query("SELECT MONTH(pl.date) as month, SUM(pl.totalPrice) as total " +
             "FROM ProductList pl " +
-            "WHERE YEAR(pl.date) = :year " +
+            "WHERE YEAR(pl.date) = :year and pl.createdBy.username = :username " +
             "GROUP BY MONTH(pl.date) " +
             "ORDER BY month")
-    List<Object[]> getMonthlyExpensesForYear(@Param("year") int year);
+    List<Object[]> getMonthlyExpensesForYear(@Param("year") int year,
+                                             @Param("username") String username);
 
     List<ProductList> findByCreatedByUsername(String username);
 }

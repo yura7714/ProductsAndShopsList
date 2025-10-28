@@ -1,12 +1,9 @@
 package ru.krutikov.products_and_shops_list.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -57,7 +54,7 @@ public class ShopController {
     public String saveShop(@ModelAttribute Shop shop,
                            @AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails.getUsername();
-        User currentUser = userService.findUserByEmail(username);
+        User currentUser = userService.findUserByUsername(username);
 
         shop.setCreatedBy(currentUser);
 

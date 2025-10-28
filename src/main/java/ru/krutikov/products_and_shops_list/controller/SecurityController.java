@@ -41,7 +41,7 @@ public class SecurityController {
     public String registration(@Valid @ModelAttribute("user") UserDto userDto,
                                BindingResult result,
                                Model model) {
-        User existingUser = userService.findUserByEmail(userDto.getUsername());
+        User existingUser = userService.findUserByUsername(userDto.getUsername());
 
         if(existingUser != null && existingUser.getUsername() != null && !existingUser.getUsername().isEmpty()) {
             result.rejectValue("username", null, "Учетная запись с таким логином уже существует!");

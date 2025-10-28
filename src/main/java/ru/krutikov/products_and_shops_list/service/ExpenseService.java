@@ -23,44 +23,21 @@ public class ExpenseService {
     }
 
     // Расходы за последние 12 месяцев
-    public List<MonthlyExpenseDto> getLast12MonthsExpenses() {
+    public List<MonthlyExpenseDto> getLast12MonthsExpenses(String username) {
         LocalDate endDate = LocalDate.now();
         LocalDate startDate = endDate.minusMonths(11).withDayOfMonth(1);
 
-        List<Object[]> results = productListRepository.getMonthlyExpenses(startDate, endDate);
+        List<Object[]> results = productListRepository.getMonthlyExpenses(startDate, endDate, username);
         return mapToMonthlyExpenseDto(results);
     }
 
     // Расходы за конкретный год
-    public List<MonthlyExpenseDto> getYearlyExpenses(int year) {
-        List<Object[]> results = productListRepository.getMonthlyExpensesForYear(year);
+    public List<MonthlyExpenseDto> getYearlyExpenses(int year, String username) {
+        List<Object[]> results = productListRepository.getMonthlyExpensesForYear(year, username);
         List<MonthlyExpenseDto> expenses = mapToMonthlyExpenseDto(results);
 
         // Заполняем все месяцы (даже с нулевыми расходами)
         return fillMissingMonths(expenses, year);
-    }
-
-    // Расходы за текущий год
-    public List<MonthlyExpenseDto> getCurrentYearExpenses() {
-        return getYearlyExpenses(LocalDate.now().getYear());
-    }
-
-    // Суммарные расходы по месяцам
-    public Map<String, Double> getMonthlyTotals(int year) {
-        List<MonthlyExpenseDto> expenses = getYearlyExpenses(year);
-        return expenses.stream()
-                .collect(Collectors.toMap(
-                        MonthlyExpenseDto::getMonthName,
-                        MonthlyExpenseDto::getTotal
-                ));
-    }
-
-    // Общая сумма за период
-    public Double getTotalExpensesForPeriod(LocalDate startDate, LocalDate endDate) {
-        List<Object[]> results = productListRepository.getMonthlyExpenses(startDate, endDate);
-        return results.stream()
-                .mapToDouble(result -> (Double) result[2])
-                .sum();
     }
 
     private List<MonthlyExpenseDto> mapToMonthlyExpenseDto(List<Object[]> results) {
