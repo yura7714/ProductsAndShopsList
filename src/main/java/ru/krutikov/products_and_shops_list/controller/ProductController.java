@@ -1,5 +1,6 @@
 package ru.krutikov.products_and_shops_list.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,7 @@ import ru.krutikov.products_and_shops_list.dto.ProductDto;
 import ru.krutikov.products_and_shops_list.dto.QuickProductRequest;
 import ru.krutikov.products_and_shops_list.service.ProductService;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -24,6 +26,7 @@ public class ProductController {
     @PostMapping("/quick-create")
     public ResponseEntity<ProductDto> quickCreateProduct(@RequestBody QuickProductRequest request,
                                                          @AuthenticationPrincipal UserDetails userDetails) {
+        log.info("POST /api/products/quick-create - создание продукта {} пользователем: {}", request.getName(), userDetails.getUsername());
         ProductDto newProduct = productService.quickCreate(request, userDetails.getUsername());
         return ResponseEntity.ok(newProduct);
     }

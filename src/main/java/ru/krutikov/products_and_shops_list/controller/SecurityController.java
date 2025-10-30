@@ -1,6 +1,9 @@
 package ru.krutikov.products_and_shops_list.controller;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +16,7 @@ import ru.krutikov.products_and_shops_list.service.UserService;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 public class SecurityController {
     private UserService userService;
@@ -41,9 +45,12 @@ public class SecurityController {
     public String registration(@Valid @ModelAttribute("user") UserDto userDto,
                                BindingResult result,
                                Model model) {
+        log.info("POST /register/save - сохранение пользователя: {}", userDto.getUsername());
+
         User existingUser = userService.findUserByUsername(userDto.getUsername());
 
         if(existingUser != null && existingUser.getUsername() != null && !existingUser.getUsername().isEmpty()) {
+            log.warn("Попытка создать уже существующего пользователя: {}", existingUser.getUsername());
             result.rejectValue("username", null, "Учетная запись с таким логином уже существует!");
         }
 
@@ -57,7 +64,9 @@ public class SecurityController {
     }
 
     @GetMapping("/users")
-    public String users(Model model) {
+    public String users(Model model,
+                        @AuthenticationPrincipal UserDetails userDetails) {
+        log.info("GET /users - получение списка пользователей пользователем {}", userDetails.getUsername());
         List<UserDto> users = userService.findAllUsers();
         model.addAttribute("users", users);
         return "users";

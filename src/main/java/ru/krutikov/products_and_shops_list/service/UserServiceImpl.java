@@ -1,5 +1,6 @@
 package ru.krutikov.products_and_shops_list.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
@@ -33,6 +35,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveUser(UserDto userDto) {
+        log.info("Сохранение пользователя из регистрации: {}", userDto.getUsername());
+
         User user = new User();
         user.setUsername(userDto.getUsername());
         //encrypt the password using spring security
@@ -49,6 +53,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveUser(User user) {
+        log.info("Сохранение пользователя из формы: {}", user.getUsername());
+
         userRepository.save(user);
     }
 
@@ -59,12 +65,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserByUsername(String email) {
-        return userRepository.findByUsername(email);
+    public User findUserByUsername(String username) {
+        log.info("Поиск пользователя по логину: {}", username);
+        return userRepository.findByUsername(username);
     }
 
     @Override
     public List<UserDto> findAllUsers() {
+        log.info("Поиск всех пользователей");
         List<User> users = userRepository.findAll();
         return users.stream()
                 .map(this::mapToUserDto)
@@ -73,6 +81,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findById(Long userId) {
+        log.info("Поиск пользователя по id: {}", userId);
         return userRepository.findById(userId);
     }
 

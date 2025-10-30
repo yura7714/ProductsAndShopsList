@@ -1,5 +1,6 @@
 package ru.krutikov.products_and_shops_list.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +17,7 @@ import ru.krutikov.products_and_shops_list.service.UserService;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Controller
 public class ShopController {
     private final ShopService shopService;
@@ -30,6 +32,7 @@ public class ShopController {
     @GetMapping("/shops")
     public String shops(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("GET /shops - получение списка магазинов пользователем: {}", authentication.getName());
 
         List<Shop> shops;
         if (authentication.getAuthorities().stream()
@@ -43,7 +46,8 @@ public class ShopController {
     }
 
     @GetMapping("/addShop")
-    public ModelAndView addShop() {
+    public ModelAndView addShop(@AuthenticationPrincipal UserDetails userDetails) {
+        log.info("GET /addShop - получение формы добавления магазина пользователем: {}", userDetails.getUsername());
         ModelAndView mav = new ModelAndView("update-shop-form");
         Shop shop = new Shop();
         mav.addObject("shop", shop);
@@ -54,6 +58,7 @@ public class ShopController {
     public String saveShop(@ModelAttribute Shop shop,
                            @AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails.getUsername();
+        log.info("POST /saveShop - сохранение магазина {} пользователем {}", shop.getName(), username);
         User currentUser = userService.findUserByUsername(username);
 
         shop.setCreatedBy(currentUser);
@@ -63,13 +68,17 @@ public class ShopController {
     }
 
     @GetMapping("/deleteShop")
-    public String deleteShop(@RequestParam Long shopId) {
+    public String deleteShop(@RequestParam Long shopId,
+                             @AuthenticationPrincipal UserDetails userDetails) {
+        log.info("GET /deleteShop - удаление магазина с id {} пользователем {}", shopId, userDetails.getUsername());
         shopService.deleteById(shopId);
         return "redirect:/shops";
     }
 
     @GetMapping("/updateShop")
-    public ModelAndView updateShop(@RequestParam Long shopId) {
+    public ModelAndView updateShop(@RequestParam Long shopId,
+                                   @AuthenticationPrincipal UserDetails userDetails) {
+        log.info("GET /updateShop - получение формы изменения магазина с id {} пользователем {}", shopId, userDetails.getUsername());
         ModelAndView mav = new ModelAndView("update-shop-form");
         Optional<Shop> optionalShop = shopService.findById(shopId);
         Shop shop = new Shop();

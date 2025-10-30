@@ -1,5 +1,6 @@
 package ru.krutikov.products_and_shops_list.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +24,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Controller
 public class ProductListController {
     private final ShopService shopService;
@@ -43,9 +45,11 @@ public class ProductListController {
 
     @GetMapping("/productLists")
     public ModelAndView productLists() {
-        ModelAndView mav = new ModelAndView("list-product-lists");
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        log.info("GET /productLists - получение списков покупок пользователем: {}", authentication.getName());
+
+        ModelAndView mav = new ModelAndView("list-product-lists");
 
         List<ProductList> productLists;
         if (authentication.getAuthorities().stream()
@@ -62,16 +66,19 @@ public class ProductListController {
 
     @GetMapping("/addProductList")
     public ModelAndView addProductList() {
+        String username = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
+        log.info("GET /addProductList - получение формы добавления списка покупок пользователем: {}", username);
+
         ModelAndView mav = new ModelAndView("update-product-list");
 
         ProductList productList = new ProductList();
         productList.setDate(LocalDate.now());
         mav.addObject("productList", productList);
 
-        String username = SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getName();
         List<Shop> userShops = shopService.findAllByUser(username);
 
         mav.addObject("shops", userShops);
@@ -85,6 +92,8 @@ public class ProductListController {
     @PostMapping("/saveProductList")
     public String saveProductList(@ModelAttribute ProductList productList,
                                   @AuthenticationPrincipal UserDetails userDetails) {
+        log.info("POST /saveProductList - сохранение списка покупок {} пользователем: {}", productList.getName(), userDetails.getUsername());
+
         String username = userDetails.getUsername();
         User currentUser = userService.findUserByUsername(username);
 
@@ -95,13 +104,18 @@ public class ProductListController {
     }
 
     @GetMapping("/deleteProductList")
-    public String deleteProductList(@RequestParam Long productListId) {
+    public String deleteProductList(@RequestParam Long productListId,
+                                    @AuthenticationPrincipal UserDetails userDetails) {
+        log.info("GET /deleteProductList - удаление списка покупок с id {} пользователем {}", productListId, userDetails.getUsername());
+
         productListService.deleteById(productListId);
         return "redirect:/productLists";
     }
 
     @GetMapping("/updateProductList")
-    public ModelAndView updateProductList(@RequestParam Long productListId) {
+    public ModelAndView updateProductList(@RequestParam Long productListId,
+                                          @AuthenticationPrincipal UserDetails userDetails) {
+        log.info("GET /updateProductList - обновление списка покупок с id {} пользователем {}", productListId, userDetails.getUsername());
         ModelAndView mav = new ModelAndView("update-product-list");
 
         Optional<ProductList> optionalProductList = productListService.findById(productListId);

@@ -1,5 +1,6 @@
 package ru.krutikov.products_and_shops_list.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.krutikov.products_and_shops_list.dto.MonthlyExpenseDto;
@@ -12,6 +13,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class ExpenseService {
@@ -24,6 +26,7 @@ public class ExpenseService {
 
     // Расходы за последние 12 месяцев
     public List<MonthlyExpenseDto> getLast12MonthsExpenses(String username) {
+        log.info("Расходы за последние 12 месяцев у пользователя: {}", username);
         LocalDate endDate = LocalDate.now();
         LocalDate startDate = endDate.minusMonths(11).withDayOfMonth(1);
 
@@ -33,6 +36,7 @@ public class ExpenseService {
 
     // Расходы за конкретный год
     public List<MonthlyExpenseDto> getYearlyExpenses(int year, String username) {
+        log.info("Расходы за {} год у пользователя: {}", year, username);
         List<Object[]> results = productListRepository.getMonthlyExpensesForYear(year, username);
         List<MonthlyExpenseDto> expenses = mapToMonthlyExpenseDto(results);
 
